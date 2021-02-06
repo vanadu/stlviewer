@@ -4,54 +4,105 @@ import { GridHelper } from '../src/helpers/GridHelper.js';
 import {OrbitControls} from '../examples/jsm/controls/OrbitControls.js';
 import { STLLoader } from '../examples/jsm/loaders/STLLoader.js';
 
+// !VA AALIYAH SITE SCRIPTS
+// !VA 
+console.log('scripts.js loaded');
+
+// !VA Chapter 1 - Fundamentals
+// !VA canvas and renderer
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({canvas});
 const scene = new THREE.Scene();
+// !VA stl and box are global variables into which the STL mesh and bounding box are copied when the STL is loaded so the geometry can be accessed outside the STLLoader closure
+let stl, box, box2;
+// !VA Helper functions added by me
+// !VA three.js takes rotation values in radians
+function deg2rad(degrees) {
+  //convert degrees to radians   
+  return Math.PI * degrees/180; 
+} 
 
 
-// Global variables for bounding boxes
-let bbox;
 
+// !VA This is from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_stl.html
+// const loader2 = new STLLoader();
 const loader = new STLLoader();
 const promise = loader.loadAsync('model1.stl');
 promise.then(function ( geometry ) {
-  const material = new THREE.MeshPhongMaterial( { color: 0xff5533, specular: 0x111111, shininess: 200 } );
+  const material = new THREE.MeshPhongMaterial();
   const mesh = new THREE.Mesh( geometry, material );
-  // !VA Cener the mesh geometry in the scene.
-  geometry.center();
-  mesh.geometry.computeBoundingBox();
-  bbox = mesh.geometry.boundingBox;
-  console.log(`bbox.max.y :>> ${bbox.max.y};`)
-  // !VA Takes rotation values in radians, so convert, see function at top of main closure
-  // !VA Rotate model so it is standing upright.
-  // mesh.rotation.x = deg2rad(270);
-  // mesh.rotation.y = 0;
-  // mesh.rotation.z =0;
-  // console.log('mesh.rotation :>> ');
-  // console.log(mesh.rotation);
-  // mesh.position.set( 0, - 0.25, 0.6 );
-  mesh.position.set( 0, bbox.max.y, 0 );
-  // !VA Rotation, the original is commented
-  // mesh.rotation.set( 0, - Math.PI / 2, 0 );
-  mesh.rotation.set( 0, 0, 0 );
-  // !VA Trying to manipulate, the original is commented
-  // mesh.scale.set( 0.5, 0.5, 0.5 );
-  // mesh.scale.set( 0.25, 0.25, 0.25 );
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
   scene.add( mesh );
   buildScene();
-  console.log('STL file loaded!');
 }).catch(failureCallback);
+
 
 function failureCallback(){
   console.log('Could not load STL file!');
 }
 
+
+
+// !VA IMPORTING AS ES6 MODULE - NOT A CHILD OF THE THREE OBJECT!
+// !VA This works, using async await and setTimeout. 
+// const loader = new STLLoader();
+function loadSTL() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log('Wait 100ms for STL to load, then build the scene');
+      // buildScene();
+    }, 100);
+  });
+} 
+
+async function loadSTLAsync() {
+  // console.log('asyncCall is run first');
+  const loader = new STLLoader();
+  loader.load( 'model2.stl', function ( geometry ) {
+    // !VA This centers the mesh geometry in the scene. But it doesn't set a specific position for the mesh.
+    geometry.center();
+    const material = new THREE.MeshPhongMaterial( { color: 0xff5533, specular: 0x111111, shininess: 200 } );
+    const mesh = new THREE.Mesh( geometry, material );
+    mesh.geometry.computeBoundingBox();
+    box = mesh.geometry.boundingBox;
+    // mesh.position.set( 0, - 0.25, 0.6 );
+    mesh.position.set( 0, box.max.y, 0 );
+    console.log(`box.max.y :>> ${box.max.y};`);
+    // !VA Rotation, the original is commented
+    // mesh.rotation.set( 0, - Math.PI / 2, 0 );
+    mesh.rotation.set( 0, 0, 0 );
+    // !VA Takes rotation values in radians, so convert, see function at top of main closure
+    // !VA Rotate model so it is standing upright.
+    // mesh.rotation.x = deg2rad(270);
+    // mesh.rotation.y = 0;
+    // mesh.rotation.z =0;
+    // console.log('mesh.rotation :>> ');
+    // console.log(mesh.rotation);
+    // !VA Trying to manipulate, the original is commented
+    // mesh.scale.set( 0.5, 0.5, 0.5 );
+    // mesh.scale.set( 0.25, 0.25, 0.25 );
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    // !VA Copy the mesh to the global stl variable so it can be accessed outside the closure. Not using this now, since all we really need is the bounding box
+    // stl = mesh;
+    scene.add( mesh );
+    // !VA This seems to have the same effect as lookAt scene, see below. the mes object only exists within this closure though, so using lookAt with it can only happen here.
+    // camera.lookAt(mesh.position);
+  });
+  const result = await loadSTL();
+  console.log(result);
+  // expected output: "resolved"
+}
+// !VA Run the async STLLoader with Promise
+loadSTLAsync();
+
+// !VA buildScene is run after the 100ms delay to allow the STL object to
 function buildScene() {
-  console.log('STL file is loaded, so now build the scene');
-  // !VA bounding box of the STL mesh accessible now
-  console.log(bbox);
+  console.log('STL mesh is loaded, so build the scene');
+  // !VA bounding box of the STL mesh
+  console.log('box :>> ');
+  console.log(box);
+  console.log('box2 :>> ');
+  console.log(box2);
   // !VA Camera. See the Lights chapter.
   const fov = 45;
   const aspect = 2;  // the canvas default

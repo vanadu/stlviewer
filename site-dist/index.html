@@ -1,0 +1,577 @@
+<!--   Copyright 2018 Van L. Albert
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+//     http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License. -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" itemscope itemtype="http://schema.org/Article">
+<head>
+  <meta charset="utf-8">
+  <title>witty-js v1.01</title>
+  
+
+  <meta name="description" content="HTML Email builder tool to set image dimensions and get image info (i.e. aspect ratio) and build tabular HTML code snippets.">
+  <meta name="keywords" content="HTML Email, image, dimensions, aspect ratio, builder, tabular, tables, tool, CSS, code, snippets">
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,800|Source+Code+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon_16x16.ico?v=2" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" media="all" href="css/style.css">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5-els.js"></script>
+  <![endif]-->
+
+</head>
+<!-- <html> -->
+<!-- /this script on the body tag prevents unwanted triggering of the handleFileSelect function if app elements are inadvertently dragged; not sure if this is the best way to do this. -->
+<BODY ondragstart="return false;" ondrop="return false;">
+
+  <!-- HEADER -->
+  <!-- /.header-container -->
+
+  <div class="header-isolate-app isolate">
+    <img src="img/isolate-witty.png" alt="" class="src">
+  </div>
+
+
+  <div class="header-container">
+    <!-- .header-content -->
+    <div class="header-content">
+      <div class="header-image">
+        <a href="#"><img id="testme" src="img/witty-icon.png" alt="witty" class="header-img left"></a>
+      </div>
+
+      <div class="header-text">
+        <div class="header-logo">
+          <h1 id="testme2">witty-js.com</h1>
+          <div class="header-version"><p>v 1.01</p></div>
+        </div>
+  
+        <div class="header-subtext">
+          <h2><span class="whit-initial-cap initial-cap">W</span>ebapp for <span class="whit-initial-cap initial-cap">I</span>mage <span class="whit-initial-cap initial-cap">T</span>ags and <span class="whit-initial-cap initial-cap"></span>T</span>abular La<span class="whit-initial-cap initial-cap">y</span>outs</h2> 
+        </div>
+      </div>
+
+
+      <!-- .header-subtext -->
+
+    </div><!-- /.header-content -->
+  </div><!-- /.header-container -->
+
+  
+
+  <!-- APP -->
+  <!-- #app-container -->
+  <div id="app-container">
+
+
+      <div id="app-blocker"></div>
+      <div id="app-message-container">
+        <p id="tip-content">
+          <!-- Placeholder error message -->
+        <!-- <span class="tooltip-heading">Display Size:</span> Scaled image dimensions if smaller than Size On Disk. Set width or height in toolbar. Shift+Click to copy attributes. Ctrl+Click to copy style properties.  -->
+        </p>
+        <p id="msg-content">
+          <!-- Placeholder status message -->
+        </p>
+        <p id="err-content">
+          <!-- Placeholder error message -->
+        </p>
+      </div>
+   
+
+
+    <!-- #inspector-container -->
+    <div id="inspector-container">
+      <!-- #inspectors -->
+        <!-- Dim Viewer Labels are in ::before pseudoclass in CSS -->
+
+
+        <div class="inspectors-left-col">
+          <ul class="inspector-list">
+            <li id="ins-display-size" class="inspector">
+              <p id="ins-display-size-label" class="inspector-label inspector-click" data-tip="This is the tip!">Display Size:</p>
+              <p class="no-image pop-font">No Image</p>
+              <span id="ins-display-size-width-value" class="inspector-value inspector-click pop-font"></span><span class="inspector-x"> X </span><span id="ins-display-size-height-value" class="inspector-value inspector-click pop-font"></span>
+            </li>
+            <li id="ins-disk-size" class="inspector">
+              <p id="ins-disk-size-label" class="inspector-label">Size On Disk:</p>
+              <span id="ins-disk-size-width-value" class="inspector-value pop-font"></span><span class="inspector-x"> X </span><span id="ins-disk-size-height-value" class="inspector-value pop-font"></span>
+              <p class="no-image pop-font">No Image</p>
+            </li>
+            <li id="ins-aspect" class="inspector">
+              <p id="ins-aspect-label" class="inspector-label">Aspect Ratio:</p>
+              <span id="ins-aspect-value" class="pop-font inspector-value"></span>
+              <p class="no-image pop-font">No Image</p>
+            </li>
+          </ul>
+        </div>
+        <div class="inspectors-center-col">
+          <div id="ins-filename">
+            <p></p>
+          </div>
+          <div id="btn-toggle-ccp-container">
+            <button id="btn-toggle-ccp"></button>
+          </div>
+        </div>
+
+        <div class="inspectors-right-col">
+          <ul class="inspector-list">
+            <li id="ins-small-phones" class="inspector">
+              <p id="ins-small-phones-label" class="inspector-label inspector-click">Small Phones</p>
+              <p class="no-image pop-font">No Image</p>
+              <span id="ins-small-phones-width-value" class="inspector-value inspector-click pop-font"></span> X <span id="ins-small-phones-height-value" class="inspector-value inspector-click pop-font"></span>
+            </li>
+            <li id="ins-large-phones" class="inspector">
+              <p id="ins-large-phones-label" class="inspector-label inspector-click">Large Phones</p>
+              <p class="no-image pop-font">No Image</p>
+              <span id="ins-large-phones-width-value" class="inspector-value inspector-click pop-font"></span> X <span id="ins-large-phones-height-value" class="inspector-value inspector-click  pop-font"></span>
+            </li>
+            <li id="ins-retina" class="inspector">
+              <p id="ins-retina-label" class="inspector-label">Retina: </p>
+              <span id="ins-retina-width-value" class="inspector-value pop-font"></span> X <span id="ins-retina-height-value" class="inspector-value pop-font"></span>
+              <p class="no-image pop-font">No Image</p>
+            </li>
+          </ul>
+        </div>
+            
+
+      
+      <!-- /dim-viewers -->
+    </div>
+    <!-- /dim-viewer container -->
+
+    <!-- #toolbar-container -->
+    <div id="toolbar-container">
+      <!-- #toolbar -->
+        <!-- #toolbar-buttons -->
+        <ul class="toolbar-buttons btn-group" role="group" aria-label="...">
+            <!-- VA! viewerW value is set from localStorage or CSS in calcViewerSize -->
+            <li><input id="ipt-tbr-viewerw" class="ttip toolbar-input btn btn-default" type="text" value="" placeholder="650" tabindex="1"></li>
+            <!-- TODO: Replace this image with a SVG or HTML entity -->
+            <li role="separator"><img class="divider" src="img/divider.png" alt="witty.JS"></li>
+            <li><button id="btn-tbr-incr50" type="button" class="toolbar-but btn btn-default"  tabindex="7"></button></li>
+            <li><button id="btn-tbr-incr10" type="button" class="toolbar-but btn btn-default" tabindex="8"></button></li>
+            <li><button id="btn-tbr-incr01" type="button" class="toolbar-but btn btn-default" tabindex="9"></button></li>
+    
+            <li><input id="ipt-tbr-imgwidth" class="toolbar-input btn btn-default" type="text" placeholder="W (px)" tabindex="2"></li>
+            <li><input id="ipt-tbr-imgheight" class="toolbar-input btn btn-default" type="text" placeholder="H (px)" tabindex="3"></li>
+    
+            <li><button id="btn-tbr-decr01" type="button" class="toolbar-but btn btn-default" tabindex="10"></button></li>
+            <li><button id="btn-tbr-decr10" type="button" class="toolbar-but btn btn-default" tabindex="11"></button></li>
+            <li><button id="btn-tbr-decr50" type="button" class="toolbar-but btn btn-default" tabindex="12"></button></li>
+
+          <li role="separator"><img class="divider" src="img/divider.png" alt="witty.JS"></li>
+          <!-- VA! 900 is a dummy value that should be overwritten programmatically by the setAttribute property -->
+          <!-- VA! 050920 Changed the values for value, data-sphonesw and data-lphonesw to empty because the dummy value I had in there before was just confusing me  -->
+          <li><input id="ipt-tbr-sphones-width" class="toolbar-input btn btn-default" data-sphonesw="" value="" placeholder="320" type="text" tabindex="4"></li>
+          <li><input id="ipt-tbr-lphones-width" class="toolbar-input btn btn-default" data-lphonesw="" value="" placeholder="414" type="text" tabindex="5"></li>
+        </ul> 
+        <!-- /#toolbar-buttons -->
+
+
+    </div><!-- /#toolbar-container -->
+
+    <!-- #image-viewport -->
+    <div id="image-viewport">
+
+      <!-- #ccp clipboard control panel -->
+      <div id="ccp">
+        <h2>Clipboard Options</h2>
+        <!-- #ccp-content -->
+        <div id="ccp-content">
+          <!-- #ccp-content -->
+          <fieldset id="ccp-img-options" class="ccp-fieldset">
+            <legend>&lt;img&gt; Options</legend>
+              <div class="ccp-options-container">
+                <div class="ccp-options-col-1"> 
+                    <!-- VA! Reboot: why no parent div here?-->
+                    <button id="btn-ccp-make-img-tag" class="ccp-but"></button> 
+                    <div id="ccp-img-align" class='ttip'> 
+                      <label id="sel-ccp-img-align-label" class="col-2-label" for="sel-ccp-img-align">align=</label> 
+                      <select id="sel-ccp-img-align"> 
+                        <option selected="selected">none</option> 
+                        <option>left</option> 
+                        <option>middle</option> 
+                        <option>right</option> 
+                      </select> 
+                    </div> 
+                </div> 
+                <div class="ccp-options-col-2"> 
+                  <div id="ccp-img-class"> 
+                    <label id="ipt-ccp-img-class-label" class="col-2-label" for="ipt-ccp-img-class-input">class=</label> 
+                    <input id="ipt-ccp-img-class" value="" placeholder="none" />  
+                  </div> 
+
+                  <div id="ccp-img-relpath"> 
+                    <label id="ipt-ccp-img-relpath-label" class="col-2-label" for="ipt-ccp-img-relpath">path=</label> 
+                    <input id="ipt-ccp-img-relpath" value="img" placeholder="none" />
+                    <!-- <span class="slash">&nbsp;/</span>  -->
+                  </div> 
+
+
+                  <!-- VA! V2 Leaving this out for now... -->
+                  <!-- <div id="img-width">
+                      <label id="img-width-label" for="img-width">width=</label> 
+                      <select id="img-width-select">  -->
+                      <!-- VA! These options are set in handleTableWidth -->
+                      <!-- </select>
+                  </div>  -->
+
+
+                </div> 
+                <div class="ccp-options-col-3"> 
+                  <div id="ccp-img-alt"> 
+                    <label id="ipt-ccp-img-alt-label" class="col-2-label" for="ipt-ccp-img-alt">alt=</label> 
+                    <input id="ipt-ccp-img-alt" value="" placeholder="none" /> 
+                  </div> 
+                  <div id="ccp-img-include-width-height" > 
+                    <!-- VA! Reboot: This is the label that goes with the fake checkbox hack -->
+                    <label class="ccp-img-include-width-height-container mock-checkbox-container" id="ccp-img-include-width-height-container" for="img-include-width-height">
+                      <!-- VA! Reboot: This is the label I added to allow positioning of the text label  -->
+                      <label class="ccp-img-include-width-height-label mock-checkbox" id="ccp-img-include-width-height-label" for="chk-ccp-img-include-width-height-checkbox">
+                      
+                      Include width and height in style attribute</label>
+                    <!-- The default checkbox is hidden -->
+                    <input type="checkbox" checked id="chk-ccp-img-include-width-height-checkbox">
+                    <span id="spn-ccp-img-include-width-height-checkmrk"></span>
+                    <!-- VA! These options are set in handleTableWidth -->
+                  </label> 
+                  </div> 
+
+                  <div id="ccp-img-include-anchor" > 
+                    <!-- VA! Reboot: This is the label that goes with the fake checkbox hack -->
+                    <label class="ccp-img-include-anchor-container mock-checkbox-container" id="ccp-img-include-anchor-container" for="img-include-anchor">
+                      <!-- VA! Reboot: This is the label I added to allow positioning of the text label  -->
+                      <label class="ccp-img-include-anchor-label mock-checkbox" id="ccp-img-include-anchor-label" for="chk-ccp-img-include-anchor-checkbox">
+                      
+                      Wrap &lt;img&gt; with anchor tag</label>
+                    <!-- The default checkbox is hidden -->
+                    <input type="checkbox" checked id="chk-ccp-img-include-anchor-checkbox">
+                    <span id="spn-ccp-img-include-anchor-checkmrk"></span>
+                    <!-- VA! These options are set in handleTableWidth -->
+                  </label> 
+                  </div> 
+
+                    <!-- VA! V2 Leaving this out for now... -->
+                    <!-- <div id="img-max-width"> -->
+                        <!-- VA! These options are set in handleTableWidth -->
+                        <!-- <label for="img-max-width-input">max-width:</label>
+                        <input id="img-max-width-input" value="" placeholder="" />
+                    </div> -->
+                </div>
+                <div class="ccp-options-col-4"> 
+                  <div id="ccp-make-img-dsktp-css-rule" class="ccp-but-container"> 
+                    <button id="btn-ccp-make-img-dsktp-css-rule" class="ccp-but"></button> 
+                  </div>  
+                  <div id="ccp-make-img-lgphn-css-rule" class="ccp-but-container"> 
+                    <button id="btn-ccp-make-img-lgphn-css-rule" class="ccp-but"></button> 
+                  </div> 
+                  <div id="ccp-make-img-smphn-css-rule" class="ccp-but-container"> 
+                    <button id="btn-ccp-make-img-smphn-css-rule" class="ccp-but"></button> 
+                  </div> 
+                </div> 
+              </div> <!-- VA! Test -->
+            <!-- /This element is populated dynamically in scripts.js -->
+          </fieldset>
+          <!-- /fieldset #image-options -->
+
+          <fieldset id="ccp-td-options" class="ccp-fieldset">
+            <!-- /This element is populated dynamically in scripts.js -->
+  
+              <legend>&lt;td&gt; Options</legend> 
+              <div class="ccp-options-container">
+                <div class="ccp-options-col-1"> 
+                  <!-- VA! Reboot: why no parent div here? -->
+                    <button id="btn-ccp-make-td-tag" class="ccp-but"></button> 
+                    <div id="ccp-td-align"> 
+                      <label id="sel-ccp-td-align-label" class="col-1-label" for="sel-ccp-td-align">align=</label> 
+                      <select id="sel-ccp-td-align">
+                        <option>none</option> 
+                        <option selected="selected">left</option> 
+                        <option>center</option> 
+                        <option>right</option> 
+                      </select>  
+                    </div> 
+                    <div id="ccp-td-valign"> 
+                      <label id="sel-ccp-td-valign-label" class="col-1-label" for="sel-ccp-td-valign">valign=</label>
+                      <select id="sel-ccp-td-valign"> 
+                        <option>none</option> 
+                        <option selected="selected">top</option> 
+                        <option>middle</option> 
+                        <option>bottom</option> 
+                      </select> 
+                    </div>
+
+                    <div id="ccp-td-borderradius">
+                      <label for="ipt-ccp-td-borderradius" class="col-1-label" id="ipt-ccp-td-borderradius-label">border radius=</label>
+                      <input type="text" id="ipt-ccp-td-borderradius" placeholder="none" value="" />
+                    </div>
+                    
+                </div> 
+      
+                <div class="ccp-options-col-2"> 
+                  <div id="ccp-td-class"> 
+                    <label id="ipt-ccp-td-class-label" class="col-2-label" for="ipt-ccp-td-class">class=</label> 
+                    <input id="ipt-ccp-td-class" value="" placeholder="none" />  
+                  </div> 
+
+                  <div id="ccp-td-height">
+                    <label iid="ipt-ccp-td-height-label" for="ipt-ccp-td-height" class="col-2-label" id="ipt-ccp-td-height-label">height=</label>
+                    <input type="text" id="ipt-ccp-td-height" placeholder="none" value="" />
+                  </div>
+                  <div id="ccp-td-width">
+                    <label id="ipt-ccp-td-width-label" for="ipt-ccp-td-width" class="col-2-label" id="ipt-ccp-td-width-label">width=</label>
+                    <input type="text" id="ipt-ccp-td-width" placeholder="none" value="" />
+                  </div>
+                  <div id="ccp-td-bgcolor">
+                    <label id="ipt-ccp-td-bgcolor-label" for="ipt-ccp-td-bgcolor" class="col-2-label" id="ipt-ccp-td-bgcolor-label">bkgrnd  color=</label>
+                    <input type="text" id="ipt-ccp-td-bgcolor" placeholder="none" value="" />
+                  </div>
+                  <div id="ccp-td-fontcolor">
+                    <label id="ipt-ccp-td-fontcolor-label" for="ipt-ccp-td-fontcolor" class="col-2-label" id="ipt-ccp-td-fontcolor-label">font color=</label>
+                    <input type="text" id="ipt-ccp-td-fontcolor" placeholder="none" value="" />
+                  </div>
+                  <div id="ccp-td-bordercolor">
+                    <label id="ipt-ccp-td-bordercolor-label" for="ipt-ccp-td-bordercolor" class="col-2-label" id="ipt-ccp-td-bordercolor-label">border color=</label>
+                    <input type="text" id="ipt-ccp-td-bordercolor" placeholder="none" value="" />
+                  </div>
+                </div> 
+                <div class="ccp-options-col-3">
+
+                  <div id="ccp-td-basictd" > 
+                    <input name="tdoptions" type="radio" id="rdo-ccp-td-basic"  value="basic">
+                    <label class="rdo-ccp-td-basic-label" id="rdo-ccp-td-basic-label" for="rdo-ccp-td-basic">
+                      &lt;td&gt; with options
+                  </div> 
+
+                  <div id="ccp-td-basictd-excludeimg" > 
+                    <input name="tdoptions" type="radio" id="rdo-ccp-td-excludeimg"  value="excludeimg">
+                    <label class="rdo-ccp-td-basic-excludeimg-label" id="rdo-ccp-td-excludeimg-label" for="rdo-ccp-td-basic-excludeimg">
+                      &lt;td&gt; with options (exclude &lt;img&gt;)
+                  </div>
+
+                  <div id="ccp-td-posswitch" > 
+                    <input name="tdoptions" checked type="radio" id="rdo-ccp-td-posswitch" value="posswitch">
+                    <label class="rdo-ccp-td-posswitch-label" id="rdo-ccp-td-posswitch-label" for="rdo-ccp-td-posswitch-radio">
+                      RTL Position Switch
+                  </div> 
+
+                  <div id="ccp-td-imgswap" > 
+                    <!-- The default checkbox is hidden -->
+                    <input name="tdoptions" type="radio" id="rdo-ccp-td-imgswap" value="imgswap">
+                    <label class="rdo-ccp-td-imgswap-label" id="rdo-ccp-td-imgswap-label" for="rdo-ccp-td-imgswap">
+                      Mobile image swap
+                  </div> 
+
+                  <div id="ccp-td-bgimage" > 
+                    <input type="radio" name="tdoptions" id="rdo-ccp-td-bgimage" value="bgimage">
+                    <label class="rdo-ccp-td-bgimage-label" id="rdo-ccp-td-bgimage-label" for="rdo-chk-ccp-td-bgimage">
+                      Background image by <a class="ccp-link" href="https://backgrounds.cm/">Stig</a>
+                      </label>
+                  </div> 
+
+                  <div id="ccp-td-vmlbutton" > 
+                    <input type="radio" name="tdoptions" id="rdo-ccp-td-vmlbutton" value="vmlbutton">
+                    <label class="rdo-ccp-td-vmlbutton-label" id="rdo-ccp-td-vmlbutton-label" for="rdo-chk-ccp-td-vmlbutton">
+                      VML Button by <a class="ccp-link" href="https://buttons.cm/">Stig</a>
+                      </label>
+                  </div>
+                </div>
+                <div class="ccp-options-col-4"> 
+                  <button id="btn-ccp-make-td-dsktp-css-rule" class="ccp-but"></button> 
+                  <button id="btn-ccp-make-td-lgphn-css-rule" class="ccp-but"></button> 
+                  <button id="btn-ccp-make-td-smphn-css-rule" class="ccp-but"></button> 
+                </div> 
+              </div>
+            </fieldset>
+
+          <fieldset id="ccp-table-options" class="ccp-fieldset">
+          <!-- /This element is populated dynamically in scripts.js -->
+
+            <legend>&lt;table&gt; Options</legend> 
+
+              <div class="ccp-options-container">  
+                <div class="ccp-options-col-1">
+                    <!-- VA! Reboot: why no parent div here-->
+                  <button id="btn-ccp-make-table-tag" class="ccp-but"></button> 
+                </div> 
+                <div class="ccp-options-col-2">
+                  <p class="ccp-heading">Parent Table</p>
+                  <div id="ccp-table-class"> 
+                    <label id="ipt-ccp-table-class-label" class="col-2-label"for="ipt-ccp-table-class">class=</label>
+                    <input id="ipt-ccp-table-class" placeholder="none" />  
+                  </div> 
+                  <div id="ccp-table-width">
+                      <label id="ipt-ccp-table-width-label" class="col-2-label" for="ipt-ccp-table-width">width=</label> 
+                      <input id="ipt-ccp-table-width" value="" placeholder="" />
+                  </div>
+                  <div id="ccp-table-align"> 
+                    <label class="col-2-label" id="sel-ccp-table-align-label" for="sel-ccp-table-align">align=</label> 
+                    <!-- We can hard code these because there isn't any dynamic data -->
+                    <select id="sel-ccp-table-align"> 
+                      <option>none</option>
+                      <option>left</option> 
+                      <option selected="selected">center</option> 
+                      <option>right</option> 
+                    </select>
+                  </div>
+                  <div id="ccp-table-bgcolor">
+                      <label id="ipt-ccp-table-bgcolor-label" class="col-2-label" for="ipt-ccp-table-bgcolor" id="ipt-ccp-table-bgcolor-label">bkgrnd  color=</label>
+                      <input type="text" id="ipt-ccp-table-bgcolor" placeholder="none" value="" />
+                  </div> 
+                </div>
+                <div class="ccp-options-col-3"> 
+                  <div id="ccp-table-include-wrapper"> 
+                    <!-- !VA watch out... the 'for' might be wrong -->
+                    <!-- VA! Reboot: This is still wrong...see how it renders-->
+                    <!-- VA! Reboot: Removing this outer header text, it's not necessary. In Arnie the checkbox label itself serves as the header.-->
+                    <!-- <p class="ccp-heading">Wrapper Table</p> -->
+                      <label class="ccp-table-include-wrapper-container mock-checkbox-container" id="ccp-table-include-wrapper-container" for="ccp-table-include-wrapper">
+                        <!-- VA! This is the inner label - the click area for the checkbox-->
+                        <label class="ccp-table-include-wrapper-label mock-checkbox" id="ccp-table-include-wrapper-label" for="chk-ccp-table-include-wrapper-checkbox">Include wrapper table
+                        </label>
+                      <!-- The default checkbox is hidden -->
+                      <input type="checkbox" id="chk-ccp-table-include-wrapper-checkbox">
+                      <span id="spn-ccp-table-include-wrapper-checkmrk"></span>
+                      <!-- VA! These options are set in handleTableWidth -->
+                    </label> 
+                  </div> 
+                  <div id="ccp-table-wrapper-class"> 
+                      <label class="col-3-label" id="ipt-ccp-table-wrapper-class-label" for="ipt-ccp-table-wrapper-class">class=</label>
+                      <input id="ipt-ccp-table-wrapper-class" placeholder="none" />  
+                  </div> 
+                  <div id="ccp-table-wrapper-width"> 
+                      <label id="ipt-ccp-table-wrapper-width-label" class="col-3-label" for="ipt-ccp-table-wrapper-width">width=</label>
+                      <input id="ipt-ccp-table-wrapper-width" placeholder="none" />  
+                  </div> 
+                  <div id="ccp-table-wrapper-align"> 
+                    <label id="sel-ccp-table-wrapper-align-label" class="col-3-label" for="sel-ccp-table-wrapper-align">align=</label>
+                    <select id="sel-ccp-table-wrapper-align"> 
+                      <option>none</option>
+                      <option>left</option> 
+                      <option selected="selected">center</option> 
+                      <option>right</option> 
+                    </select>
+                  </div> 
+                  <div id="ccp-table-wrapper-bgcolor"> 
+                      <label id="ipt-ccp-table-wrapper-bgcolor-label" class="col-3-label" for="ipt-ccp-input-table-wrapper-bgcolor">bkgrnd color=</label>
+                      <input id="ipt-ccp-table-wrapper-bgcolor" placeholder="none" />  
+                  </div> 
+                </div>
+
+                <div class="ccp-options-col-4"> 
+                  <button id="btn-ccp-make-table-dsktp-css-rule" class="ccp-but"></button> 
+                  <button id="btn-ccp-make-table-lgphn-css-rule" class="ccp-but"></button> 
+                  <button id="btn-ccp-make-table-smphn-css-rule" class="ccp-but"></button> 
+                </div> 
+
+              </div>
+          </fieldset>
+
+        </div><!-- /#ccp-content -->
+      </div>
+      <!-- /#ccp clipboard control panel -->
+
+      <!-- #main-image-viewer -->
+      <div id="main-image-viewer">
+        <!-- #main-image -->
+        <div id="main-image">
+          <!-- #drop-area -->
+          <div id="drop-area">
+  
+            <p class="drop-callout">Drop Image File Here</p>
+            <p class="drop-area-content">Use the input fields in the Toolbar to change the table width and image height/width. You can also change width and height properties of the CSS output for mobile devices.</p>
+            <p class="drop-area-content">To place tabular HTML code using the selected image dimensions in the clipboard, click the Clipboard button to open the Clipboard Options panel, then select options and click the image, table cell or table icon. </p>
+            <p class="drop-area-content">To output CSS, enter a class name for the element. Icons for full display width, small and medium mobile devices appear. Click the icons to copy the CSS snippet to the clipboard.</p>
+            <p class="drop-area-content" style="text-align: left">To make the most out of witty-js, use a <a href="https://en.wikipedia.org/wiki/Clipboard_manager" alt="Clipboard Managers">clipboard manager</a>.</p>
+  
+          </div>
+          <!-- /#drop-area -->
+            <!-- DEVIMG HERE -->
+            <div id="cur-img-container">
+              <!-- <img src="img/TEST/_625X525.png" data-is-dev1=true    id="cur-img" alt=""> -->
+              <!-- <img src="img/sdtour/bo-ben.png" data-is-dev1=true    id="cur-img" alt=""> -->
+            </div>
+            <!-- USER-SELECTED IMAGE PROGRAMMATICALLY INSERTED HERE -->
+            <!-- VA! Reboot are these two divs necessary?It appears not as of 01.13.20, I've commented them out and the file validates and the main image displays
+            </div>
+          </div> -->
+          <!--<output id="list">    </output>-->
+        </div>
+        <!-- #main-image -->
+      </div>
+      <!-- /main-image-viewer -->
+
+    </div>
+    <!-- /image-viewport -->
+
+  </div>
+  <!-- /#app-container -->
+
+
+
+
+  <section class="content-section">
+    <div class="content__overview">
+      <h1 class="content__overview-heading"><span class="appname">whitty-js</span> Overview</h1>
+      <p class="content__overview-text">
+        witty-js is designed to help HTML Email developers create fully responsive HTML emails using a tabular layout in situations where fluid layouts aren't appropriate, for example when the document will undergo regulatory or legal reviews in which total control of word wrap and line breaks are required, or when the document has to reflect a specific branding or layout in which vertical positioning of elements without content resizing is critical.
+      </p>
+      <p class="content__overview-text">
+        Witty helps developers keep track of image dimension property values so they can be reused in multiple places in the document. In conjunction with a clipboard manager, developers can quickly build a store of all the HTML and CSS code snippets relevant for a specific image and insert them at various positions in the document with a few mouseclicks. 
+      </p>
+      <p class="content__overview-text"></p>
+    </div>
+    <div class="end__matter" style="padding: 30px">
+      <p style="font-size: 14px; text-align: center;">&copy;2020 Van Albert&nbsp;&nbsp;&nbsp;&nbsp;All rights reserved.</p>
+    </div>
+    
+    <!-- <div style="position: relative; height: 300px; border: 1px solid red"> -->
+    
+        <!-- <input id="post-shortlink" value="https://ac.me/qmE_jpnYXFo"> -->
+        <!-- <button class="button" id="copy-button" data-clipboard-target="#post-shortlink">Copy</button> -->
+    
+    </div>
+  </section>
+
+
+
+  
+
+
+
+<!--<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="-->
+<!--crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.10.3/beautify-html.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+<script src="js/scripts.js"></script>
+<!-- <script src="js/test.js"></script> -->
+<!-- <script src="js/scrap.js"></script> -->
+
+
+
+<script>
+
+
+(function(){
+    new ClipboardJS('#copy-button');
+})();
+
+
+</script>
+
+
+
+</body>
+</html>
